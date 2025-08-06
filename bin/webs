@@ -1,0 +1,265 @@
+#!/usr/bin/env raku
+use v6.d;
+
+#Of course! Let's create a complete, runnable Raku web application called "Butterfly Webs". We'll use the popular and easy-to-learn **Bailador** framework, which is perfect for this kind of project.
+#
+#This application will:
+#1.  Have a home page that lists different types of butterflies.
+#2.  Allow you to click on a butterfly to see a details page for it.
+#3.  Use templates for the HTML and a separate CSS file for styling.
+#
+#Here is the complete guide to creating all the necessary development files.
+#
+#### Step 1: Project Structure
+#
+#First, create a directory for your project called `butterfly-webs`. Inside, create the following files and directories. This structure separates your application logic, your web page templates, and your static files (like CSS).
+#
+# ```
+#butterfly-webs/
+#├── app.raku            # The main application logic
+#├── META6.json          # Project metadata and dependencies
+#├── public/             # For static files (CSS, JS, images)
+#│   └── css/
+#│       └── style.css
+#└── views/              # For HTML templates
+#    ├── main.mustache   # The main layout/wrapper
+#    ├── index.mustache  # The home page template
+#    └── butterfly.mustache # The individual butterfly page template
+# ```
+
+#---
+
+### Step 2: Create the Files
+
+#Now, let's create the content for each file.
+#
+##### 1. `META6.json` (Dependencies)
+#
+#This file tells Raku's module installer, `zef`, what other modules our application needs. In this case, we need `Bailador`.
+
+# ```json
+#{
+#  "name": "ButterflyWebs",
+#  "version": "0.1.0",
+#  "author": "Your Name",
+#  "description": "A simple website about butterflies.",
+#  "depends": [
+#    "Bailador"
+#  ],
+#  "provides": {}
+#}
+# ```
+#
+##### 2. `public/css/style.css` (Styling)
+#
+#This is a simple stylesheet to make our website look pleasant.
+#
+# ``` css
+#body {
+#    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+#line-height: 1.6;
+#background-color: #f0f8ff; /* AliceBlue */
+#color: #333;
+#margin: 0;
+#padding: 0;
+#}
+#
+#.container {
+#    max-width: 800px;
+#margin: 20px auto;
+#padding: 20px;
+#background-color: #ffffff;
+#border-radius: 8px;
+#box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+#}
+#
+#header {
+#    text-align: center;
+#    border-bottom: 2px solid #e0e0e0;
+#    padding-bottom: 15px;
+#    margin-bottom: 20px;
+#}
+#
+#h1, h2 {
+#    color: #005a9c;
+#    }
+#
+#h1 {
+#    font-size: 2.5em;
+#}
+#
+#h2 {
+#    font-size: 2em;
+#}
+#
+#.butterfly-list {
+#    list-style-type: none;
+#padding: 0;
+#}
+#
+#.butterfly-list li {
+#    margin: 10px 0;
+#}
+#
+#.butterfly-list a {
+#    text-decoration: none;
+#color: #0077cc;
+#font-size: 1.2em;
+#padding: 10px;
+#display: block;
+#background-color: #f9f9f9;
+#border-radius: 5px;
+#transition: background-color 0.3s, transform 0.2s;
+#}
+#
+#.butterfly-list a:hover {
+#    background-color: #e6f7ff;
+#transform: translateX(5px);
+#}
+#
+#.butterfly-details em {
+#    color: #555;
+#display: block;
+#margin-bottom: 15px;
+#}
+#
+#.back-link {
+#    display: inline-block;
+#margin-top: 20px;
+#text-decoration: none;
+#color: #0077cc;
+#font-weight: bold;
+#}
+#
+#.back-link:hover {
+#    text-decoration: underline;
+#}
+# ```
+
+#### 3. `views/main.mustache` (Main HTML Layout)
+
+#This is the main template. It contains the HTML structure that's common to all pages (like the header and footer). The `{{{ content }}}` part is where the specific page content will be injected.
+
+# ```html
+#<!DOCTYPE html>
+#<html lang="en">
+#<head>
+#    <meta charset="UTF-8">
+#    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+#    <title>🦋 Butterfly Webs</title>
+#    <link rel="stylesheet" href="/css/style.css">
+#</head>
+#<body>
+#    <div class="container">
+#        <header>
+#            <h1>🦋 Butterfly Webs 🦋</h1>
+#        </header>
+#
+#        <main>
+#            {{{ content }}}
+#</main>
+#        </div>
+#        </body>
+#        </html>
+# ```
+
+#### 4. `views/index.mustache` (Home Page Template)
+
+#This template is for the home page. It receives a list of butterflies and creates a link for each one.
+
+# ```html
+#<h2>Our Collection of Butterflies</h2>
+#<ul class="butterfly-list">
+#    {{#butterflies}}
+#<li>
+#        <a href="/butterfly/{{slug}}">{{name}}</a>
+#        </li>
+#        {{/butterflies}}
+#</ul>
+# ```
+
+#### 5. `views/butterfly.mustache` (Details Page Template)
+
+#This template displays the details for a single butterfly.
+
+# ```html
+#<div class="butterfly-details">
+#    <h2>{{butterfly.name}}</h2>
+#        <em>{{butterfly.scientific-name}}</em>
+#        <p>{{butterfly.description}}</p>
+#        </div>
+#
+#        <a href="/" class="back-link">← Back to the list</a>
+# ```
+
+#### 6. `app.raku` (The Main Application)
+
+#This is the heart of our application. It defines the "routes" (the URLs our app responds to), loads the data, and renders the templates.
+
+# ```raku
+
+# --- In-memory Data ---
+# In a real app, this might come from a database or a JSON file.
+# --- Routes ---
+
+# Set the directory for our static files (like CSS)
+# Bailador::App.config.public_dir = 'public';
+
+# Route for the home page
+# get '/' => sub {
+#    sub template($p1, $p2, :$layout) is export {
+#        say put $p1, $p2, :$layout;
+#    }
+# }
+# Render the 'index' template, passing the list of all butterflies to it.
+# The result will be injected into the 'main' layout.
+
+
+# Route for an individual butterfly's page
+# The ':slug' part is a dynamic parameter from the URL
+#get '/butterfly/:slug' -> $slug {
+#    # Find the butterfly that matches the slug from the URL
+#    my $butterfly = @butterflies.first({ $_<slug> eq $slug });
+#
+#    # If we found a butterfly, render its page
+#    if $butterfly {
+#        template 'butterfly', { :$butterfly }, layout => 'main';
+#    }
+#    # Otherwise, return a 404 Not Found error
+#    else {
+#        ba-send-error( "Sorry, we couldn't find a butterfly with the slug '$slug'.", 404 );
+#    }
+#}
+
+
+say "🦋 Butterfly Webs is flying at http://127.0.0.1:3000";
+say "Press Ctrl-C to stop.";
+# ```
+#
+#---
+#
+#### Step 3: How to Run the Application
+#
+#1.  **Install Prerequisites:** Make sure you have [Raku installed](https://raku.org/downloads/). It comes with the module installer `zef`.
+#
+#2.  **Open Your Terminal:** Navigate into the `butterfly-webs` directory you created.
+#    ```bash
+#    cd path/to/butterfly-webs
+#    ```
+#
+#3.  **Install Dependencies:** Run `zef` to install `Bailador` (as specified in your `META6.json` file).
+#    ```bash
+#    zef --deps-only install .
+#    ```
+#
+#4.  **Run the App:** Start your web server with the following command:
+#    ```bash
+#    raku app.raku
+#    ```
+#
+#5.  **View Your Website:** You will see a message in your terminal:
+#    `🦋 Butterfly Webs is flying at http://127.0.0.1:3000`
+#
+#    Open your web browser and go to **<http://127.0.0.1:3000>**. You should see your home page! Click on any butterfly name to see its details page.
+#
+#You have now successfully created a complete Raku web application. You can easily expand it by adding more butterflies to the `@butterflies` array in `app.raku`. Happy coding

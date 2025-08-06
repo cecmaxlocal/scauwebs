@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="CroLink" type="PERL6_CRO_RUN_CONFIGURATION" factoryName="Cro Service" singleton="false">
+    <SCRIPT_PATH>$PROJECT_DIR$/bin/webs</SCRIPT_PATH>
+    <SCRIPT_ARGS>website</SCRIPT_ARGS>
+    <WORKING_DIRECTORY>$PROJECT_DIR$</WORKING_DIRECTORY>
+    <ENV_VARS />
+    <PASS_ENVIRONMENT>false</PASS_ENVIRONMENT>
+    <PERL6_PARAMS />
+    <DEBUG_PORT>9999</DEBUG_PORT>
+    <START_SUSPENDED>false</START_SUSPENDED>
+    <LOG_TIMELINE_EVENTS>await,file,process,socket,start</LOG_TIMELINE_EVENTS>
+    <CRO_DEV_MODE>true</CRO_DEV_MODE>
+    <method v="2" />
+  </configuration>
+</component>

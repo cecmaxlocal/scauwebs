@@ -1,0 +1,22 @@
+{
+  "name": "scauwebs",
+  "description": "Write me!",
+  "version": "0.1",
+  "perl": "6.*",
+  "authors": [
+    "Write me!"
+  ],
+  "auth": "Write me!",
+  "depends": [
+    "Bailador"
+  ],
+  "build-depends": [],
+  "test-depends": [],
+  "provides": {
+    "scauwebs": "lib/scauwebs.rakumod"
+  },
+  "resources": [],
+  "license": "Write me!",
+  "source-url": "Write me!",
+  "author": "Your Name"
+}
