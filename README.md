@@ -2,7 +2,7 @@ Of course. Based on the information you provided, here is a well-structured `REA
 
 This README explains the purpose of the project and details the function of each directory you listed. You can copy and paste this directly into a `README.md` file in your project's root directory.
 
-<img src="./image/logon.webp">
+<img src="./matrix/cec/image/logon.webp">
 
 ---
 
